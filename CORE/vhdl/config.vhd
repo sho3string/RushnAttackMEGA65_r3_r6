@@ -82,15 +82,15 @@ constant SCR_WELCOME : string :=
    "Done by Muse in 2025\n\n" &
 
    -- We are not insisting. But it would be nice if you gave us credit for MiSTer2MEGA65 by leaving these lines in
-   "Powered by M2M Ver 2\n"     &
-   "By sy2002 and MJoergen in 2025\n"     &
+   "Powered by M2M Ver 2.0.1\n"           &
+   "By sy2002 and MJoergen 2025\n"        &
    "\n\n"                                 &
    "Credits  : Press '5' or '6'\n"        & 
    "Start    : Press '1' or '2'\n"        &
-   "Controls : Joy 1 & Joy 2\n"           &
-   "Shoot    : Mega key\n"                &
-   "Flame    : <space bar>\n"             &
-   "\n\n    Press Space to continue.\n"; 
+   "Controls : Joys or Keyboard\n"        &
+   "Shoot 1  : Mega key\n"                &
+   "Shoot 2  : <space bar>\n"             &
+   "\n\n  Press Space to continue.\n"; 
    
 constant HELP_1 : string :=
 
@@ -408,8 +408,8 @@ constant OPTM_ITEMS        : string :=
    "\n"                     &
    " Misc Settings\n"       &
    "\n"                     & 
-   " Special Weapon"        &
-   " Special Weapon"        &
+   " Special Weapon\n"      &
+   " Special Weapon\n"      &
    "\n"                     &
    " Disable timer\n"       &
    " 0.00s\n"               &
