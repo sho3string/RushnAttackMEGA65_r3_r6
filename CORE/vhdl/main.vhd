@@ -85,7 +85,7 @@ signal keyboard_n   : std_logic_vector(79 downto 0);
 signal pause_cpu    : std_logic;
 signal audio        : std_logic_vector(7 downto 0);
 
-signal reset             : std_logic := reset_hard_i or reset_soft_i;
+signal reset            : std_logic := reset_hard_i or reset_soft_i;
 
 -- highscore system
 signal hs_address       : std_logic_vector(15 downto 0);
@@ -151,9 +151,22 @@ signal m_right2            : std_logic;
 signal m_trig21            : std_logic;
 signal m_trig22            : std_logic;
 
+-- Second button.
+constant C_MENU_BOMB_TRIG_EN  : natural := 81;
+constant C_MENU_BOMB_TRIG_0   : natural := 82;
+constant C_MENU_BOMB_TRIG_1   : natural := 83;
+constant C_MENU_BOMB_TRIG_2   : natural := 84;
+constant C_MENU_BOMB_TRIG_3   : natural := 85;
+constant C_MENU_BOMB_TRIG_4   : natural := 86;
+constant C_MENU_BOMB_TRIG_5   : natural := 87;
+constant C_MENU_BOMB_TRIG_6   : natural := 88;
+constant C_MENU_BOMB_TRIG_7   : natural := 89;
+constant C_MENU_BOMB_TRIG_8   : natural := 90;
+
 signal p1_weapon_auto      : std_logic;
 signal p2_weapon_auto      : std_logic;
 signal trigger_sel         : std_logic_vector(3 downto 0);
+signal trigger_en          : std_logic;
 
 begin
     
@@ -162,6 +175,7 @@ begin
         if rising_edge(clk_main_i) then
             if not reset then -- workaround ( prevents core from freezing ).Wait for core to reset before connecting inputs.
                 dual_controls <= dsw_c_i(1);
+                trigger_en  <= osm_control_i(C_MENU_BOMB_TRIG_EN);
                 m_up1       <= keyboard_n(m65_up_crsr) and joy_1_up_n_i and joy_2_up_n_i when dual_controls = '1' else joy_1_up_n_i and keyboard_n(m65_up_crsr);
                 m_down1     <= keyboard_n(m65_vert_crsr) and joy_1_down_n_i and joy_2_down_n_i when dual_controls = '1' else joy_1_down_n_i and keyboard_n(m65_vert_crsr);
                 m_left1     <= keyboard_n(m65_left_crsr) and joy_1_left_n_i and joy_2_left_n_i when dual_controls = '1' else joy_1_left_n_i and keyboard_n(m65_left_crsr);
@@ -204,16 +218,24 @@ begin
                osm_control_i(C_MENU_KONAMI_V8)   &
                osm_control_i(C_MENU_KONAMI_V4)   &
                osm_control_i(C_MENU_KONAMI_V2);
-     
-    trigger_sel <= "0110";          
+            
+    trigger_sel <="0000" when osm_control_i(C_MENU_BOMB_TRIG_0) = '1' else
+                  "0001" when osm_control_i(C_MENU_BOMB_TRIG_1) = '1' else
+                  "0010" when osm_control_i(C_MENU_BOMB_TRIG_2) = '1' else
+                  "0011" when osm_control_i(C_MENU_BOMB_TRIG_3) = '1' else
+                  "0100" when osm_control_i(C_MENU_BOMB_TRIG_4) = '1' else
+                  "0101" when osm_control_i(C_MENU_BOMB_TRIG_5) = '1' else
+                  "0110" when osm_control_i(C_MENU_BOMB_TRIG_6) = '1' else
+                  "0111" when osm_control_i(C_MENU_BOMB_TRIG_7) = '1' else
+                  "1000" when osm_control_i(C_MENU_BOMB_TRIG_8) = '1';
                
-    -- for player 1 and player 2 ( cocktail / table mode )
+    -- for player 1 and player 2
     i_bombtrigger : entity work.bombtrigger
     port map (
     
     clk_i           => clk_main_i,
     reset_i         => reset,
-    enable_n_i      => '0',--osm_control_i(C_MENU_BOMB_TRIG_EN),
+    enable_n_i      => trigger_en,
     -- player1                                        
     fire1_n_i       => m_trig11,
     bomb1_o         => p1_weapon_auto,
@@ -238,8 +260,8 @@ begin
      reset          => reset,
      user_button    => keyboard_n(m65_p),
      pause_request  => hs_pause,
-     options        => options,  -- not status(11 downto 10), - TODO, hookup to OSD.
-     OSD_STATUS     => '0',       -- disabled for now - TODO, to OSD
+     options        => options,
+     OSD_STATUS     => '0',
      r              => video_red_o,
      g              => video_green_o,
      b              => video_blue_o,

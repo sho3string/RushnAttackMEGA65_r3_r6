@@ -2,13 +2,6 @@
 -- Wonderboy Arcade Core for the MEGA65 
 --
 -- Clock Generator using the Xilinx specific MMCME2_ADV:
---
--- The MiSTer Wonderboy core needs these clocks:
---
---    48.4 MHz video clock
---
--- Wonderboy port done by Samuel P ( Muse ) in 2024
--- MiSTer2MEGA65 done by sy2002 and MJoergen in 2022 and licensed under GPL v3
 -------------------------------------------------------------------------------------------------------------
 
 library ieee;

@@ -408,7 +408,7 @@ begin
               main_osm_control_i(C_MENU_KONAMI_DSWC_3) &   -- unused
               main_osm_control_i(C_MENU_KONAMI_DSWC_2) &   -- unused
               main_osm_control_i(C_MENU_KONAMI_DSWC_1) &   -- dual controls
-              main_osm_control_i(C_MENU_KONAMI_DSWC_0);    -- flip screen
+              main_osm_control_i(C_MENU_KONAMI_DSWC_0);    -- flip screen, not implemented in MiSTer core
 
 
    -- main.vhd contains the actual MiSTer core

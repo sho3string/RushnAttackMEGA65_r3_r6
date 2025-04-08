@@ -79,10 +79,10 @@ constant SCR_WELCOME : string :=
    "Green Beret V0.5.0 (beta)\n" &
    "-------------------------\n" &
    "\n" &
-   "MiSTer port done by Muse in 2025\n\n" &
+   "Done by Muse in 2025\n\n" &
 
    -- We are not insisting. But it would be nice if you gave us credit for MiSTer2MEGA65 by leaving these lines in
-   "Powered by MiSTer2MEGA65 Ver 2\n"     &
+   "Powered by M2M Ver 2\n"     &
    "By sy2002 and MJoergen in 2025\n"     &
    "\n\n"                                 &
    "Credits  : Press '5' or '6'\n"        & 
@@ -319,7 +319,7 @@ constant OPTM_S_SAVING     : string := "<Saving>";          -- the internal writ
 --             Do use a lower case \n. If you forget one of them or if you use upper case, you will run into undefined behavior.
 --          2. Start each line that contains an actual menu item (multi- or single-select) with a Space character,
 --             otherwise you will experience visual glitches.
-constant OPTM_SIZE         : natural := 77;  -- amount of items including empty lines:
+constant OPTM_SIZE         : natural := 95;  -- amount of items including empty lines:
                                              -- needs to be equal to the number of lines in OPTM_ITEMS and amount of items in OPTM_GROUPS
                                              -- IMPORTANT: If SAVE_SETTINGS is true and OPTM_SIZE changes: Make sure to re-generate and
                                              -- and re-distribute the config file. You can make a new one using M2M/tools/make_config.sh
@@ -347,7 +347,7 @@ constant OPTM_ITEMS        : string :=
    " 576p 50 Hz 5:4\n"      &
     "\n"                    &
    " Back to main menu\n"   &
-   " VGA: %s\n"             &  -- VGA submenu
+   " VGA: %s\n"             &
    " VGA Display Mode\n"    &
    "\n"                     &
    " Standard\n"            &
@@ -406,6 +406,24 @@ constant OPTM_ITEMS        : string :=
    "\n"                     &
    " Back to main menu\n"   &
    "\n"                     &
+   " Misc Settings\n"       &
+   "\n"                     & 
+   " Special Weapon"        &
+   " Special Weapon"        &
+   "\n"                     &
+   " Disable timer\n"       &
+   " 0.00s\n"               &
+   " 0.10s\n"               &
+   " 0.13s\n"               &
+   " 0.16s\n"				&
+   " 0.20s\n"               &
+   " 0.23s\n"               &
+   " 0.25s\n"               &
+   " 0.30s\n"               &
+   " 0.33s\n"               &
+   "\n"                     &
+   " Back to main menu\n"   &
+   "\n"                     &
    " Close Menu\n";
 
 -- define your own constants here and choose meaningful names
@@ -453,7 +471,10 @@ constant OPTM_G_KONAMIWB_H16        : integer := 32;
 constant OPTM_G_KONAMIWB_V2         : integer := 33;        
 constant OPTM_G_KONAMIWB_V4         : integer := 34;    
 constant OPTM_G_KONAMIWB_V8         : integer := 35;
-constant OPTM_G_KONAMIWB_V16        : integer := 36;   
+constant OPTM_G_KONAMIWB_V16        : integer := 36;
+
+-- Second button
+constant OPTM_G_BOMB_TRIG           : natural := 37;
         
 -- !!! DO NOT TOUCH !!!
 type OPTM_GTYPE is array (0 to OPTM_SIZE - 1) of integer range 0 to 2**OPTM_GTC- 1;
@@ -514,14 +535,14 @@ constant OPTM_GROUPS       : OPTM_GTYPE := ( OPTM_G_TEXT + OPTM_G_HEADLINE,     
                                              OPTM_G_SUBMENU,                                            -- Dipswitch B Submenu start
                                              OPTM_G_TEXT + OPTM_G_HEADLINE,                             -- Dipswitch B Title
                                              OPTM_G_LINE,                                               -- Line
-                                             OPTM_G_KONAMIWB_DSWA0  + OPTM_G_SINGLESEL,                 -- Lives A                  
+                                             OPTM_G_KONAMIWB_DSWA0  + OPTM_G_SINGLESEL + OPTM_G_STDSEL, -- Lives A  - 3 lives                
                                              OPTM_G_KONAMIWB_DSWA1  + OPTM_G_SINGLESEL,                 -- Lives B
                                              OPTM_G_KONAMIWB_DSWA2  + OPTM_G_SINGLESEL,                 -- Cabinet
                                              OPTM_G_KONAMIWB_DSWA3  + OPTM_G_SINGLESEL,                 -- Bonus Life A  
-                                             OPTM_G_KONAMIWB_DSWA4  + OPTM_G_SINGLESEL,                 -- Bonus Life B  
-                                             OPTM_G_KONAMIWB_DSWA5  + OPTM_G_SINGLESEL,                 -- Difficulty A
+                                             OPTM_G_KONAMIWB_DSWA4  + OPTM_G_SINGLESEL + OPTM_G_STDSEL, -- Bonus Life B - 50k,100k. Every 100k
+                                             OPTM_G_KONAMIWB_DSWA5  + OPTM_G_SINGLESEL + OPTM_G_STDSEL, -- Difficulty A - Normal Difficulty
                                              OPTM_G_KONAMIWB_DSWA6  + OPTM_G_SINGLESEL,                 -- Difficulty B
-                                             OPTM_G_KONAMIWB_DSWA7  + OPTM_G_SINGLESEL,                 -- Demo Sounds                            
+                                             OPTM_G_KONAMIWB_DSWA7  + OPTM_G_SINGLESEL + OPTM_G_STDSEL, -- Demo Sounds  - Demo Sounds On                      
                                              OPTM_G_KONAMIWB_DSWB0  + OPTM_G_SINGLESEL,                 -- Coinage A
                                              OPTM_G_KONAMIWB_DSWB1  + OPTM_G_SINGLESEL,                 -- Coinage A
                                              OPTM_G_KONAMIWB_DSWB2  + OPTM_G_SINGLESEL,                 -- Coinage A  
@@ -531,10 +552,28 @@ constant OPTM_GROUPS       : OPTM_GTYPE := ( OPTM_G_TEXT + OPTM_G_HEADLINE,     
                                              OPTM_G_KONAMIWB_DSWB6  + OPTM_G_SINGLESEL,                 -- Coinage B  
                                              OPTM_G_KONAMIWB_DSWB7  + OPTM_G_SINGLESEL,                 -- Coinage B 
                                              OPTM_G_KONAMIWB_DSWC0  + OPTM_G_SINGLESEL,                 -- flip screen
-                                             OPTM_G_KONAMIWB_DSWC1  + OPTM_G_SINGLESEL,                 -- dual controls
+                                             OPTM_G_KONAMIWB_DSWC1  + OPTM_G_SINGLESEL + OPTM_G_STDSEL, -- dual controls
                                              OPTM_G_KONAMIWB_DSWC2  + OPTM_G_SINGLESEL,                 -- unused              
                                              OPTM_G_KONAMIWB_DSWC3  + OPTM_G_SINGLESEL,                 -- unused
-                                             OPTM_G_LINE,                
+                                             OPTM_G_LINE,
+                                             OPTM_G_CLOSE + OPTM_G_SUBMENU,  
+                                             OPTM_G_LINE,
+                                             OPTM_G_TEXT + OPTM_G_HEADLINE,                          
+                                             OPTM_G_LINE,  
+                                             OPTM_G_SUBMENU,                                            -- Bombtrigger sub menu
+                                             OPTM_G_TEXT + OPTM_G_HEADLINE,                             -- Bombtrigger title
+                                             OPTM_G_LINE,                                               -- Line
+                                             OPTM_G_BOMB_TRIG,                                          -- bombtrigger enable
+                                             OPTM_G_BOMB_TRIG,                                          -- 0ms
+                                             OPTM_G_BOMB_TRIG,                                          -- 100ms
+                                             OPTM_G_BOMB_TRIG,                                          -- 133ms
+                                             OPTM_G_BOMB_TRIG,                                          -- 166ms
+                                             OPTM_G_BOMB_TRIG,                                          -- 200ms 
+                                             OPTM_G_BOMB_TRIG,                                          -- etc.
+                                             OPTM_G_BOMB_TRIG  + OPTM_G_STDSEL,                                          
+                                             OPTM_G_BOMB_TRIG,                                          
+                                             OPTM_G_BOMB_TRIG,                                                    
+                                             OPTM_G_LINE,                                               -- Line
                                              OPTM_G_CLOSE + OPTM_G_SUBMENU,                             -- Close submenu / back to main menu
                                              OPTM_G_LINE,                                               -- Line
                                              OPTM_G_CLOSE                                               -- Close Menu
