@@ -151,6 +151,10 @@ signal m_right2            : std_logic;
 signal m_trig21            : std_logic;
 signal m_trig22            : std_logic;
 
+signal p1_weapon_auto      : std_logic;
+signal p2_weapon_auto      : std_logic;
+signal trigger_sel         : std_logic_vector(3 downto 0);
+
 begin
     
     process (clk_main_i)
@@ -200,6 +204,25 @@ begin
                osm_control_i(C_MENU_KONAMI_V8)   &
                osm_control_i(C_MENU_KONAMI_V4)   &
                osm_control_i(C_MENU_KONAMI_V2);
+     
+    trigger_sel <= "0110";          
+               
+    -- for player 1 and player 2 ( cocktail / table mode )
+    i_bombtrigger : entity work.bombtrigger
+    port map (
+    
+    clk_i           => clk_main_i,
+    reset_i         => reset,
+    enable_n_i      => '0',--osm_control_i(C_MENU_BOMB_TRIG_EN),
+    -- player1                                        
+    fire1_n_i       => m_trig11,
+    bomb1_o         => p1_weapon_auto,
+    -- player2                                       
+    fire2_n_i       => m_trig21,
+    bomb2_o         => p2_weapon_auto,
+    trigger_sel_i   => trigger_sel
+        
+    );
                
     i_pause : entity work.pause
     generic map (
@@ -246,14 +269,14 @@ begin
     clk48M     => clk_main_i,
     reset      => reset,
    
-    INP0(5)    => not keyboard_n(m65_space), -- trigger 2
+    INP0(5)    => not keyboard_n(m65_space) or p1_weapon_auto, -- trigger 2
     INP0(4)    => not m_trig11,              -- trigger 1
     INP0(3)    => not m_left1,               -- left
     INP0(2)    => not m_down1,               -- down    
     INP0(1)    => not m_right1,              -- right      
     INP0(0)    => not m_up1,                 -- up    
   
-    INP1(5)    => not keyboard_n(m65_space), -- trigger 2
+    INP1(5)    => not keyboard_n(m65_space) or p2_weapon_auto, -- trigger 2
     INP1(4)    => not m_trig21,              -- trigger 1
     INP1(3)    => not m_left2,               -- left
     INP1(2)    => not m_down2,               -- down    
